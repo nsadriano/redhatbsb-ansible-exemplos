@@ -1,0 +1,20 @@
+- hosts: all
+  become: yes
+  vars:
+   ansible_user: ansible-core
+  tasks:
+  - name: Instala Docker
+    yum:
+     name: docker
+     state: latest
+
+  - name: Sobe Docker
+    service:
+     name: docker
+     state: started
+
+  - name: Busca Workshop Finisher
+    shell: "docker pull lasher/workshopdone"
+
+  - name: Sobe Workshop Finisher
+    shell: "docker run -d -h $HOSTNAME -p 80:80 lasher/workshopdone"

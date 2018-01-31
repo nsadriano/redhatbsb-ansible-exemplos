@@ -1,0 +1,29 @@
+- hosts: all
+  become: yes
+  vars:
+   ansible_user: ansible-core
+  tasks:
+  - name: Instala Docker
+    yum:
+     name: docker
+     state: latest
+
+  - name: Sobe Docker
+    service:
+     name: docker
+     state: started
+
+  - name: Busca SugarCRM
+    shell: "docker pull bitnami/sugarcrm"
+
+  - name: Busca Imagem Banco Sugar
+    shell: "docker pull bitnami/mariadb"
+
+  - name: Configura Network Sugar
+    shell: "docker network create sugarcrm_network"
+
+  - name: Sobe Banco Sugar
+    shell: "docker run -d --name mariadb -e ALLOW_EMPTY_PASSWORD=yes --net=sugarcrm_network bitnami/mariadb"
+
+  - name: Sobe SugarCRM
+    shell: "docker run -d -p 80:80 --name sugarcrm --net=sugarcrm_network bitnami/sugarcrm"

@@ -1,0 +1,22 @@
+- hosts: all
+  become: yes
+  vars:
+   ansible_user: ansible-core
+  tasks:
+  - name: Instala Maria DB
+    yum:
+     name: mariadb-server
+     state: latest
+
+  - name: Sobe MariaDB
+    service:
+     name: mariadb
+     state: started
+
+  - name: Cria database teste
+    shell: mysql -u root -e "create database teste"
+    ignore_errors: yes
+
+  - name: Configura usuario teste
+    shell: mysql -u root -e "grant all privileges on teste.* to teste@'%' identified by 'teste'"
+    ignore_errors: yes

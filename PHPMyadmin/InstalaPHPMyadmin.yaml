@@ -1,0 +1,20 @@
+- hosts: all
+  become: yes
+  vars:
+   ansible_user: ansible-core
+  tasks:
+  - name: Instala Docker
+    yum:
+     name: docker
+     state: latest
+
+  - name: Sobe Docker
+    service:
+     name: docker
+     state: started
+
+  - name: Busca PHPMyadmin
+    shell: "docker pull phpmyadmin/phpmyadmin"
+
+  - name: Sobe PHPMyAdmin
+    shell: "docker run --name myadmin -d -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin/phpmyadmin"
